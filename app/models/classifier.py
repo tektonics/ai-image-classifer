@@ -5,13 +5,11 @@ import torch.nn as nn
 class ImageClassifier(nn.Module):
     def __init__(self):
         super(ImageClassifier, self).__init__()
-        # Load pre-trained ViT model and processor with fast=True
         self.model = ViTForImageClassification.from_pretrained('google/vit-base-patch16-224')
         self.processor = ViTImageProcessor.from_pretrained(
             'google/vit-base-patch16-224',
             use_fast=True
         )
-        # Store the labels from the model's config
         self.labels = self.model.config.id2label
         
     def forward(self, x):
@@ -28,7 +26,6 @@ class ImageClassifier(nn.Module):
         return inputs.pixel_values
 
     def get_class_name(self, idx):
-        # Get class name from stored labels and format it
         label = self.labels[idx]
         return label.replace("_", " ").title()
 

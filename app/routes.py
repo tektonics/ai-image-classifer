@@ -19,11 +19,9 @@ def classify_image():
         return jsonify({'error': 'No image selected'}), 400
 
     try:
-        # Read image
         image_bytes = file.read()
         image = Image.open(io.BytesIO(image_bytes))
         
-        # Convert image to RGB if needed
         if image.mode in ('RGBA', 'LA') or (image.mode == 'P' and 'transparency' in image.info):
             background = Image.new('RGB', image.size, (255, 255, 255))
             if image.mode == 'RGBA':
@@ -34,14 +32,12 @@ def classify_image():
         elif image.mode != 'RGB':
             image = image.convert('RGB')
 
-        # Preprocess image
         try:
             inputs = model.preprocess_image(image)
         except Exception as e:
             print(f"Preprocessing error: {str(e)}")
             return jsonify({'error': 'Error preprocessing image'}), 500
 
-        # Get prediction
         try:
             with torch.no_grad():
                 outputs = model(inputs)
