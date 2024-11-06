@@ -11,6 +11,9 @@ def index():
 
 @app.route('/classify', methods=['POST'])
 def classify_image():
+    if not model:
+        return jsonify({'error': 'Model not initialized'}), 500
+        
     if 'image' not in request.files:
         return jsonify({'error': 'No image uploaded'}), 400
     

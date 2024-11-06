@@ -23,10 +23,12 @@ var/
 # Virtual Environment
 venv/
 ENV/
+.env
 
 # Model weights and datasets
 model_weights.pth
 data/
+*.pth
 
 # IDE specific files
 .idea/
@@ -37,3 +39,6 @@ data/
 # OS specific files
 .DS_Store
 Thumbs.db
+
+# AWS
+.aws/

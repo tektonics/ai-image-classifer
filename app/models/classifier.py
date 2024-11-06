@@ -1,9 +1,10 @@
 from transformers import ViTForImageClassification, ViTImageProcessor
 import torch
 import torch.nn as nn
+from app.utils.aws_utils import AWSManager
 
 class ImageClassifier(nn.Module):
-    def __init__(self):
+    def __init__(self, load_from_s3=False):
         super(ImageClassifier, self).__init__()
         self.model = ViTForImageClassification.from_pretrained('google/vit-base-patch16-224')
         self.processor = ViTImageProcessor.from_pretrained(
@@ -12,6 +13,27 @@ class ImageClassifier(nn.Module):
         )
         self.labels = self.model.config.id2label
         
+        if load_from_s3:
+            self.load_model_from_s3()
+    
+    def load_model_from_s3(self):
+        aws_manager = AWSManager()
+        model_buffer = aws_manager.download_model()
+        if model_buffer:
+            state_dict = torch.load(model_buffer, weights_only=True)
+            self.model.load_state_dict(state_dict)
+            print("Model loaded successfully from S3")
+        else:
+            print("Failed to load model from S3")
+    
+    def save_model_to_s3(self):
+        aws_manager = AWSManager()
+        success = aws_manager.upload_model(self.model)
+        if success:
+            print("Model saved successfully to S3")
+        else:
+            print("Failed to save model to S3")
+
     def forward(self, x):
         outputs = self.model(x)
         return outputs.logits
