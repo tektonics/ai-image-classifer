@@ -42,3 +42,11 @@ Thumbs.db
 
 # AWS
 .aws/
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+
+# AWS Security
+keypair-policy.json

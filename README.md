@@ -61,3 +61,35 @@ python -m tests.test_aws
 
 - `GET /`: Main interface
 - `POST /classify`: Image classification endpoint
+
+## AWS Deployment
+
+This application is deployed on AWS Elastic Beanstalk. To deploy:
+
+1. Install EB CLI:
+```bash
+pip install awsebcli
+```
+
+2. Initialize EB application:
+```bash
+eb init -p python-3.9 ai-classifier
+```
+
+3. Create and deploy to production environment:
+```bash
+eb create production
+```
+
+4. Set environment variables:
+```bash
+eb setenv \
+  AWS_ACCESS_KEY_ID=your_key \
+  AWS_SECRET_ACCESS_KEY=your_secret \
+  AWS_REGION=your_region \
+  S3_BUCKET=your_bucket
+```
+
+The application will be available at the provided Elastic Beanstalk URL.
+
+
